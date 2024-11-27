@@ -1,6 +1,8 @@
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 
 int main(){
   char command[256];
@@ -14,10 +16,14 @@ int main(){
     if(result == 0){
       char* args[] = {command, NULL};
       execvp(command, args);
-      
-      printf("The command is: %s\n", command);
+      printf("Could not run the command: %s\n", command);
+      exit(29);
     } else {
-      
+      printf("PID: %d\n", result);
+      int status;
+      //wait: returns when a child process finishes
+      wait(&status);
+      printf("The child process finished: %d\n", WEXITSTATUS(status));
     }
     
   }
